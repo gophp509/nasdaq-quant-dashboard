@@ -1,141 +1,16 @@
-name: Daily Nasdaq Quant Update
+name: Daily Nasdaq Quant V2 Update
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "10 22 * * 1-5" # 06:10 Asia/Shanghai, Mon-Fri
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  update:
+  v2-placeholder:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Install dependencies
-        run: python -m pip install pandas numpy
-      - name: Update data, analyze, publish dashboard
+      - name: V2 dashboard is published
         run: |
-          python - <<'PY'
-          import json, math, urllib.parse, urllib.request
-          from datetime import date, datetime, timedelta, timezone
-          from pathlib import Path
-          import numpy as np
-          import pandas as pd
-
-          START="2010-01-01"; SOURCE="Nasdaq Official"
-          SYMBOLS={"IXIC":{"ticker":"^IXIC","nasdaq":"IXIC"},"NDX":{"ticker":"^NDX","nasdaq":"NDX"}}
-          HEADERS={"User-Agent":"Mozilla/5.0","Accept":"application/json, text/plain, */*","Origin":"https://www.nasdaq.com","Referer":"https://www.nasdaq.com/"}
-
-          def parse_num(v):
-              if v is None: return None
-              s=str(v).replace('$','').replace(',','').strip()
-              if not s or s in {'--','N/A'}: return None
-              return float(s)
-
-          def parse_date(v):
-              s=str(v).strip()
-              for f in ("%m/%d/%Y","%Y-%m-%d"):
-                  try: return datetime.strptime(s,f).date().isoformat()
-                  except ValueError: pass
-              raise ValueError(f"bad date {v}")
-
-          def clean(df, key):
-              if df.empty: return pd.DataFrame(columns=['Open','High','Low','Close','Adj Close','Volume'])
-              if 'Date' not in df.columns: df=df.reset_index()
-              df['Date']=pd.to_datetime(df['Date'])
-              for c in ['Open','High','Low','Close','Adj Close','Volume']:
-                  if c not in df.columns: df[c]=0 if c=='Volume' else np.nan
-                  df[c]=pd.to_numeric(df[c], errors='coerce')
-              df=df.dropna(subset=['Open','High','Low','Close']).drop_duplicates('Date', keep='last').sort_values('Date')
-              if df['Date'].duplicated().any(): raise ValueError(f'{key} duplicate dates')
-              if not df['Date'].is_monotonic_increasing: raise ValueError(f'{key} date order invalid')
-              return df.set_index('Date')[['Open','High','Low','Close','Adj Close','Volume']]
-
-          def fetch(key, start, end):
-              q=urllib.parse.urlencode({'assetclass':'index','fromdate':start.isoformat(),'todate':end.isoformat(),'limit':9999})
-              url=f"https://api.nasdaq.com/api/quote/{SYMBOLS[key]['nasdaq']}/historical?{q}"
-              req=urllib.request.Request(url, headers=HEADERS)
-              with urllib.request.urlopen(req, timeout=40) as r: payload=json.loads(r.read().decode('utf-8'))
-              rows=(((payload or {}).get('data') or {}).get('tradesTable') or {}).get('rows') or []
-              rec=[]
-              for row in rows:
-                  close=parse_num(row.get('close') or row.get('last'))
-                  rec.append({'Date':parse_date(row.get('date')),'Open':parse_num(row.get('open')),'High':parse_num(row.get('high')),'Low':parse_num(row.get('low')),'Close':close,'Adj Close':close,'Volume':parse_num(row.get('volume')) or 0})
-              return clean(pd.DataFrame(rec), key)
-
-          def load_update(key):
-              p=Path('data/raw')/f'{key}.csv'; p.parent.mkdir(parents=True, exist_ok=True)
-              current=clean(pd.read_csv(p), key) if p.exists() else pd.DataFrame()
-              start=(pd.Timestamp(current.index.max()).date()+timedelta(days=1)) if not current.empty else datetime.strptime(START,'%Y-%m-%d').date()
-              new=fetch(key, start, date.today()) if start<=date.today() else pd.DataFrame()
-              merged=clean(pd.concat([current,new]) if not new.empty else current, key)
-              if merged.empty: raise RuntimeError(f'{key} has no data')
-              merged.to_csv(p, index=True)
-              return merged
-
-          def indicators(df):
-              d=df.copy(); c=d['Close']
-              for n in (20,50,200): d[f'MA{n}']=c.rolling(n).mean()
-              for n in (20,50): d[f'EMA{n}']=c.ewm(span=n, adjust=False).mean()
-              delta=c.diff(); gain=delta.clip(lower=0).rolling(14).mean(); loss=(-delta.clip(upper=0)).rolling(14).mean()
-              d['RSI14']=100-(100/(1+gain/loss)); ema12=c.ewm(span=12, adjust=False).mean(); ema26=c.ewm(span=26, adjust=False).mean()
-              d['MACD']=ema12-ema26; d['MACD_signal']=d['MACD'].ewm(span=9, adjust=False).mean(); d['MACD_hist']=d['MACD']-d['MACD_signal']
-              d['BB_mid']=d['MA20']; sd=c.rolling(20).std(); d['BB_upper']=d['BB_mid']+2*sd; d['BB_lower']=d['BB_mid']-2*sd
-              return d
-
-          def trend(d):
-              x=d.dropna(subset=['Close']).iloc[-1]; ret20=d['Close'].pct_change(20).iloc[-1]; score=0
-              score += 2 if x.Close>x.MA200 else -2; score += 1 if x.MA20>x.MA50 else -1
-              score += 1 if ret20>0.03 else (-1 if ret20<-0.03 else 0); score += 1 if x.RSI14>60 else (-1 if x.RSI14<40 else 0)
-              score=max(-5,min(5,int(score)))
-              return {'long_term_trend':'bullish' if x.Close>x.MA200 else 'bearish','mid_term_trend':'bullish' if x.MA20>x.MA50 else 'bearish','short_term_momentum':'bullish' if ret20>0.03 else ('bearish' if ret20<-0.03 else 'neutral'),'trend_score':score,'price_vs_ma200_pct':float(x.Close/x.MA200-1),'ma20_vs_ma50_pct':float(x.MA20/x.MA50-1),'return_20d':float(ret20),'reason':f"close {'above' if x.Close>x.MA200 else 'below'} MA200; MA20 {'above' if x.MA20>x.MA50 else 'below'} MA50; 20d return {ret20:.2%}; RSI {x.RSI14:.1f}"}
-
-          def risk(d):
-              r=d['Close'].pct_change().dropna(); eq=(1+r).cumprod(); dd=eq/eq.cummax()-1; vol=float(r.std()*math.sqrt(252)); mdd=float(dd.min()); v95=float(r.quantile(.05)); v99=float(r.quantile(.01)); score=max(1,min(5,1+(vol>.18)+(vol>.28)+(mdd<-.25)+(v95<-.025)))
-              return {'annualized_volatility':vol,'max_drawdown':mdd,'var_95':v95,'var_99':v99,'risk_score':int(score),'reason':f'annual vol {vol:.2%}; max drawdown {mdd:.2%}; daily VaR95 {v95:.2%}'}
-
-          def mc(d, days=60, paths=5000, seed=42):
-              close=d['Close'].dropna(); r=close.pct_change().dropna(); ma=close.rolling(200).mean(); reg=pd.Series('bear', index=close.index); reg[close>=ma]='bull'; reg=reg[ma.notna()]
-              al=pd.DataFrame({'r':r,'g':reg}).dropna(); fallback=(float(r.mean()),float(r.std()))
-              stats={g:((float(v.mean()),float(v.std())) if len(v:=al.loc[al.g==g,'r'])>=30 else fallback) for g in ('bull','bear')}
-              tr=pd.DataFrame({'c':reg.shift(1),'n':reg}).dropna(); trans={}
-              for g in ('bull','bear'):
-                  vc=tr.loc[tr.c==g,'n'].value_counts(normalize=True); trans[g]={'bull':float(vc.get('bull',.95 if g=='bull' else .05)),'bear':float(vc.get('bear',.05 if g=='bull' else .95))}
-              rng=np.random.default_rng(seed); sim=np.empty((paths,days)); gr=np.full(paths,str(reg.iloc[-1]),dtype=object)
-              for i in range(days):
-                  for g in ('bull','bear'):
-                      mask=gr==g; n=int(mask.sum())
-                      if n: mu,sd=stats[g]; sim[mask,i]=rng.normal(mu,sd,n); gr[mask]=np.where(rng.random(n)<trans[g]['bull'],'bull','bear')
-              prices=float(close.iloc[-1])*np.cumprod(1+sim,axis=1); term=prices[:,-1]; rets=term/float(close.iloc[-1])-1; p10,p50,p90=np.percentile(term,[10,50,90])
-              buckets=[('上涨 > 10%',rets>.10),('上涨 0~10%',(rets>0)&(rets<=.10)),('下跌 0~5%',(rets<=0)&(rets>-.05)),('下跌 5~10%',(rets<=-.05)&(rets>-.10)),('下跌 > 10%',rets<=-.10)]
-              return {'days':days,'paths':paths,'p10':float(p10),'p50':float(p50),'p90':float(p90),'expected_return_low':float(p10/close.iloc[-1]-1),'expected_return_mid':float(p50/close.iloc[-1]-1),'expected_return_high':float(p90/close.iloc[-1]-1),'probability_up':float((term>close.iloc[-1]).mean()),'probability_table':[{'horizon':f'未来{days}天','scenario':a,'probability':float(b.mean())} for a,b in buckets],'current_regime':str(reg.iloc[-1]),'bull_daily_mean':stats['bull'][0],'bear_daily_mean':stats['bear'][0],'bull_to_bull_prob':trans['bull']['bull'],'bear_to_bear_prob':trans['bear']['bear'],'reason':f"regime starts {reg.iloc[-1]}; MA200 split"}
-
-          raw={k:load_update(k) for k in SYMBOLS}; enriched={k:indicators(v) for k,v in raw.items()}
-          Path('data/metadata').mkdir(parents=True, exist_ok=True); Path('outputs/history').mkdir(parents=True, exist_ok=True)
-          status={'last_update':datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'source':SOURCE,'last_trading_day':max(pd.Timestamp(v.index.max()) for v in raw.values()).date().isoformat(),'errors':[]}
-          for k,v in raw.items(): status[f'{k.lower()}_records']=int(len(v)); status[f'{k.lower()}_last_trading_day']=pd.Timestamp(v.index.max()).date().isoformat()
-          data={'generated_at':datetime.now(timezone.utc).isoformat(),'data_start':START,'data_end':status['last_trading_day'],'selected_symbols':list(SYMBOLS),'data_status':status,'comparison':{},'reason':'GitHub Actions cloud update; JSON excludes raw OHLCV series','symbols':{}}
-          for k,d in enriched.items():
-              x=d.dropna(subset=['Close']).iloc[-1]; trd=trend(d); rsk=risk(d); m=mc(d); inds={a:(None if pd.isna(x.get(a)) else round(float(x.get(a)),6)) for a in ['MA20','MA50','MA200','EMA20','EMA50','RSI14','MACD','MACD_signal','MACD_hist','BB_mid','BB_upper','BB_lower']}
-              data['symbols'][k]={'ticker':SYMBOLS[k]['ticker'],'data_source':'cache','cache_path':f'data/raw/{k}.csv','cache_start':pd.Timestamp(d.index.min()).date().isoformat(),'latest_date':pd.Timestamp(x.name).date().isoformat(),'latest_close':round(float(x.Close),6),'latest_indicators':inds,'trend':trd,'risk':rsk,'monte_carlo':m,'reason':f"trend_score {trd['trend_score']}; risk_score {rsk['risk_score']}; MC uses {m['current_regime']} regime"}
-          if {'IXIC','NDX'}<=set(enriched):
-              ix=enriched['IXIC']['Close'].pct_change().dropna(); nx=enriched['NDX']['Close'].pct_change().dropna(); joined=pd.concat([ix,nx],axis=1).dropna(); joined.columns=['ix','nx']
-              data['comparison']={'ndx_vs_ixic_return_20d':float(enriched['NDX']['Close'].pct_change(20).iloc[-1]-enriched['IXIC']['Close'].pct_change(20).iloc[-1]),'ndx_vs_ixic_return_60d':float(enriched['NDX']['Close'].pct_change(60).iloc[-1]-enriched['IXIC']['Close'].pct_change(60).iloc[-1]),'correlation_60d':float(joined.tail(60).corr().iloc[0,1]),'leadership':'NDX_outperforming','reason':'NDX vs IXIC comparison from local CSV'}
-          Path('data/metadata/data_status.json').write_text(json.dumps(status,ensure_ascii=False,indent=2),encoding='utf-8')
-          Path('outputs/summary.json').write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8'); Path(f"outputs/history/summary_{data['data_end']}.json").write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
-          Path('summary.json').write_text(json.dumps(data,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-          html='''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nasdaq Quant Dashboard V1.5</title><style>body{font-family:system-ui;margin:0;background:#f6f7f9;color:#111827}main,header{max-width:1100px;margin:auto;padding:24px}section{background:white;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:16px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.card{border:1px solid #e5e7eb;border-radius:8px;padding:14px}.value{font-size:24px;font-weight:750}td,th{padding:9px;border-bottom:1px solid #e5e7eb;text-align:left}table{width:100%;border-collapse:collapse}</style></head><body><header><h1>Nasdaq Quant Dashboard V1.5</h1><p id="meta"></p></header><main><section><h2>数据状态</h2><div id="status" class="grid"></div></section><section><h2>市场分析</h2><div id="market" class="grid"></div></section><section><h2>Monte Carlo</h2><div id="mc"></div></section></main><script>const f=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:2}),p=n=>(Number(n)*100).toFixed(2)+'%',card=(a,b,c='')=>`<div class=card><small>${a}</small><div class=value>${b}</div><small>${c}</small></div>`,tbl=(h,r)=>`<table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${r.map(x=>`<tr>${x.map(y=>`<td>${y}</td>`).join('')}</tr>`).join('')}</table>`;fetch('summary.json',{cache:'no-store'}).then(r=>r.json()).then(s=>{let st=s.data_status,sy=s.selected_symbols;meta.textContent=`${s.data_start} 至 ${s.data_end} · ${st.last_update}`;status.innerHTML=[card('数据来源',st.source),card('最新交易日',st.last_trading_day),card('IXIC日期 / 记录',`${st.ixic_last_trading_day} / ${st.ixic_records}`),card('NDX日期 / 记录',`${st.ndx_last_trading_day} / ${st.ndx_records}`)].join('');market.innerHTML=sy.map(k=>{let x=s.symbols[k];return card(`${k} ${x.ticker}`,f(x.latest_close),`趋势 ${x.trend.trend_score} · 风险 ${x.risk.risk_score} · 上涨概率 ${p(x.monte_carlo.probability_up)}`)}).join('');mc.innerHTML=sy.map(k=>tbl(['指数','情景','概率'],s.symbols[k].monte_carlo.probability_table.map(r=>[k,r.scenario,p(r.probability)]))).join('<br>')})</script></body></html>'''
-          Path('index.html').write_text(html,encoding='utf-8'); Path('v15.html').write_text(html,encoding='utf-8')
-          PY
-      - name: Commit changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/raw/*.csv data/metadata/data_status.json outputs/summary.json outputs/history/*.json summary.json index.html v15.html
-          git diff --cached --quiet || git commit -m "Daily Nasdaq quant update"
-          git push
+          echo "Nasdaq Market Health Dashboard V2 is published from summary.json."
+          echo "Full cloud recompute requires syncing the Python source project into this Pages repository."
