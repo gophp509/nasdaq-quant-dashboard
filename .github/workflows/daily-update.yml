@@ -2,15 +2,42 @@ name: Daily Nasdaq Quant V2 Update
 
 on:
   workflow_dispatch:
+  schedule:
+    # 07:00 Asia/Shanghai = 23:00 UTC previous day. Runs in GitHub cloud, not your PC.
+    - cron: "0 23 * * *"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  v2-placeholder:
+  update-analyze-publish:
     runs-on: ubuntu-latest
     steps:
-      - name: V2 dashboard is published
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Update CSV data only
+        run: python update_data.py
+
+      - name: Analyze local CSV and build V2 dashboard
+        run: python analyze.py
+
+      - name: Publish static Pages files
+        run: python publish_pages.py
+
+      - name: Commit updated data and dashboard
         run: |
-          echo "Nasdaq Market Health Dashboard V2 is published from summary.json."
-          echo "Full cloud recompute requires syncing the Python source project into this Pages repository."
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/raw data/metadata outputs/summary.json outputs/dashboard.html outputs/history summary.json index.html v15.html v2.html
+          git diff --cached --quiet || git commit -m "Daily Nasdaq market health V2 update"
+          git push
