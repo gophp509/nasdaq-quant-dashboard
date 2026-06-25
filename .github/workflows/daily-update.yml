@@ -3,8 +3,10 @@ name: Daily Nasdaq Quant V2 Update
 on:
   workflow_dispatch:
   schedule:
-    # 07:00 Asia/Shanghai = 23:00 UTC previous day. Runs in GitHub cloud, not your PC.
+    # 07:00 / 09:00 / 11:00 Asia/Shanghai. Runs in GitHub cloud, not your PC.
     - cron: "0 23 * * *"
+    - cron: "0 1 * * *"
+    - cron: "0 3 * * *"
 
 permissions:
   contents: write
