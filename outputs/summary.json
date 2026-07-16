@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-16T05:38:01.930075+00:00",
+  "generated_at": "2026-07-16T23:44:41.691173+00:00",
   "data_start": "2010-01-01",
   "data_end": "2026-07-15",
   "selected_symbols": [
@@ -7,7 +7,7 @@
     "NDX"
   ],
   "data_status": {
-    "last_update": "2026-07-16 05:37:58",
+    "last_update": "2026-07-16 23:44:36",
     "source": "Nasdaq Official",
     "last_trading_day": "2026-07-15",
     "ixic_records": 4212,
