@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-29T05:49:59.584326+00:00",
+  "generated_at": "2026-07-29T23:49:08.924715+00:00",
   "data_start": "2010-01-01",
   "data_end": "2026-07-28",
   "selected_symbols": [
@@ -7,16 +7,14 @@
     "NDX"
   ],
   "data_status": {
-    "last_update": "2026-07-29 05:49:56",
+    "last_update": "2026-07-29 23:49:04",
     "source": "Nasdaq Official",
     "last_trading_day": "2026-07-28",
     "ixic_records": 4221,
     "ixic_last_trading_day": "2026-07-28",
     "ndx_records": 4221,
     "ndx_last_trading_day": "2026-07-28",
-    "errors": [
-      "NDX: JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)"
-    ]
+    "errors": []
   },
   "comparison": {
     "ndx_vs_ixic_return_20d": -0.03103,
