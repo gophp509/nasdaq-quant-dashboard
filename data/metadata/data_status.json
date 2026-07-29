@@ -1,10 +1,12 @@
 {
-  "last_update": "2026-07-29 04:11:52",
+  "last_update": "2026-07-29 05:49:56",
   "source": "Nasdaq Official",
   "last_trading_day": "2026-07-28",
   "ixic_records": 4221,
   "ixic_last_trading_day": "2026-07-28",
   "ndx_records": 4221,
   "ndx_last_trading_day": "2026-07-28",
-  "errors": []
+  "errors": [
+    "NDX: JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)"
+  ]
 }
