@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-29T07:40:49.972282+00:00",
+  "generated_at": "2026-08-29T09:42:48.712032+00:00",
   "data_start": "2010-01-01",
   "data_end": "2026-08-28",
   "selected_symbols": [
@@ -7,7 +7,7 @@
     "NDX"
   ],
   "data_status": {
-    "last_update": "2026-08-29 07:40:47",
+    "last_update": "2026-08-29 09:42:43",
     "source": "Nasdaq Official",
     "last_trading_day": "2026-08-28",
     "ixic_records": 4244,
@@ -250,10 +250,10 @@
       "ai_cycle_score": 41.62
     },
     "changes_30d": {
-      "trend_score": 2.0,
+      "trend_score": 3.5,
       "risk_score": 0.0,
-      "mc_up_probability": -0.0046,
-      "ai_cycle_score": -1.61
+      "mc_up_probability": -0.0028,
+      "ai_cycle_score": 1.25
     },
     "statuses": {
       "trend_strength": "改善中",
