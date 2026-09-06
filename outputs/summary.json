@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-05T07:24:05.417982+00:00",
+  "generated_at": "2026-09-06T00:17:23.373701+00:00",
   "data_start": "2010-01-01",
   "data_end": "2026-09-04",
   "selected_symbols": [
@@ -7,23 +7,23 @@
     "NDX"
   ],
   "data_status": {
-    "last_update": "2026-09-05 07:24:00",
+    "last_update": "2026-09-06 00:17:20",
     "source": "Nasdaq Official",
     "last_trading_day": "2026-09-04",
     "ixic_records": 4249,
     "ixic_last_trading_day": "2026-09-04",
-    "ndx_records": 4248,
-    "ndx_last_trading_day": "2026-09-03",
+    "ndx_records": 4249,
+    "ndx_last_trading_day": "2026-09-04",
     "errors": []
   },
   "comparison": {
-    "ndx_vs_ixic_return_20d": -0.005235,
-    "ndx_vs_ixic_return_60d": -0.021574,
-    "ndx_vs_ixic_return_252d": 0.022531,
-    "correlation_60d": 0.955254,
-    "ndx_beta_to_ixic_60d": 1.115609,
+    "ndx_vs_ixic_return_20d": 0.000886,
+    "ndx_vs_ixic_return_60d": -0.016794,
+    "ndx_vs_ixic_return_252d": 0.029035,
+    "correlation_60d": 0.952764,
+    "ndx_beta_to_ixic_60d": 1.119272,
     "leadership": "IXIC_outperforming",
-    "reason": "IXIC leads NDX by 2.16% over 60d; corr=0.96"
+    "reason": "IXIC leads NDX by 1.68% over 60d; corr=0.95"
   },
   "reason": "local CSV analysis; update_data.py owns external data refresh; JSON excludes raw OHLCV series",
   "symbols": {
@@ -34,7 +34,7 @@
       "cache_path": "data/raw/IXIC.csv",
       "cache_start": "2010-01-01",
       "latest_date": "2026-09-04",
-      "cache_age_days": 1,
+      "cache_age_days": 2,
       "latest_close": 26506.99,
       "latest_indicators": {
         "MA20": 26383.491,
@@ -132,37 +132,37 @@
       "download_status": "cache_hit",
       "cache_path": "data/raw/NDX.csv",
       "cache_start": "2010-01-01",
-      "latest_date": "2026-09-03",
+      "latest_date": "2026-09-04",
       "cache_age_days": 2,
-      "latest_close": 29482.32,
+      "latest_close": 29544.16,
       "latest_indicators": {
-        "MA20": 29493.448,
-        "MA50": 29227.0194,
-        "MA200": 27005.7699,
-        "EMA20": 29330.477984,
-        "EMA50": 29183.640045,
-        "RSI14": 52.689809,
-        "MACD": 32.755752,
-        "MACD_signal": 60.665953,
-        "MACD_hist": -27.910201,
-        "BB_mid": 29493.448,
-        "BB_upper": 30118.025331,
-        "BB_lower": 28868.870669
+        "MA20": 29484.541,
+        "MA50": 29229.0962,
+        "MA200": 27029.4911,
+        "EMA20": 29350.828652,
+        "EMA50": 29197.778083,
+        "RSI14": 53.581669,
+        "MACD": 46.210087,
+        "MACD_signal": 57.77478,
+        "MACD_hist": -11.564693,
+        "BB_mid": 29484.541,
+        "BB_upper": 30100.396721,
+        "BB_lower": 28868.685279
       },
       "trend": {
         "long_term_trend": "bullish",
         "mid_term_trend": "bullish",
-        "short_term_momentum": "neutral",
-        "trend_score": 3,
-        "price_vs_ma200_pct": 0.091704,
-        "ma20_vs_ma50_pct": 0.009116,
-        "return_20d": 0.003711,
-        "reason": "close above MA200; MA20 above MA50; 20d return 0.37%; RSI 52.7"
+        "short_term_momentum": "negative",
+        "trend_score": 2,
+        "price_vs_ma200_pct": 0.093034,
+        "ma20_vs_ma50_pct": 0.008739,
+        "return_20d": -0.005993,
+        "reason": "close above MA200; MA20 above MA50; 20d return -0.60%; RSI 53.6"
       },
       "risk": {
-        "annualized_volatility": 0.207046,
+        "annualized_volatility": 0.207022,
         "max_drawdown": -0.355631,
-        "var_95": -0.020701,
+        "var_95": -0.0207,
         "var_99": -0.0378,
         "risk_score": 3,
         "reason": "annual vol 20.70%; max drawdown -35.56%; daily VaR95 -2.07%"
@@ -170,90 +170,90 @@
       "monte_carlo": {
         "days": 60,
         "paths": 5000,
-        "p10": 27184.989132,
-        "p50": 30934.015543,
-        "p90": 34856.880182,
-        "expected_return_low": -0.077922,
-        "expected_return_mid": 0.04924,
-        "expected_return_high": 0.182298,
-        "probability_up": 0.6916,
+        "p10": 27113.579847,
+        "p50": 31040.642339,
+        "p90": 34961.833408,
+        "expected_return_low": -0.082269,
+        "expected_return_mid": 0.050652,
+        "expected_return_high": 0.183375,
+        "probability_up": 0.691,
         "probability_table": [
           {
             "horizon": "未来60天",
             "scenario": "上涨 > 10%",
-            "probability": 0.3014
+            "probability": 0.3138
           },
           {
             "horizon": "未来60天",
             "scenario": "上涨 0~10%",
-            "probability": 0.3902
+            "probability": 0.3772
           },
           {
             "horizon": "未来60天",
             "scenario": "下跌 0~5%",
-            "probability": 0.1548
+            "probability": 0.1464
           },
           {
             "horizon": "未来60天",
             "scenario": "下跌 5~10%",
-            "probability": 0.0854
+            "probability": 0.0894
           },
           {
             "horizon": "未来60天",
             "scenario": "下跌 > 10%",
-            "probability": 0.0682
+            "probability": 0.0732
           }
         ],
         "current_regime": "bull",
-        "bull_daily_mean": 0.001121,
+        "bull_daily_mean": 0.001122,
         "bear_daily_mean": -0.001194,
-        "bull_to_bull_prob": 0.987047,
+        "bull_to_bull_prob": 0.987051,
         "bear_to_bear_prob": 0.932412,
         "reason": "regime starts bull; MA200 split with bull stay 98.7%, bear stay 93.2%"
       },
       "ai_cycle": {
-        "score": 42.17,
+        "score": 42.29,
         "stage": "中期",
         "components": {
-          "ma200_deviation": 7.86,
-          "monte_carlo": 17.29,
+          "ma200_deviation": 7.97,
+          "monte_carlo": 17.27,
           "volatility": 11.83,
           "drawdown_risk": 3.15,
-          "price_extension": 2.04
+          "price_extension": 2.07
         }
       },
       "chart_path": "outputs/charts/NDX.png",
-      "reason": "trend_score 3 from MA/RSI/MACD; risk: annual vol 20.70%; max drawdown -35.56%; daily VaR95 -2.07%; MC uses bull regime"
+      "reason": "trend_score 2 from MA/RSI/MACD; risk: annual vol 20.70%; max drawdown -35.56%; daily VaR95 -2.07%; MC uses bull regime"
     }
   },
   "ndx_tooltip": {
-    "ma200": 27005.77,
-    "current_price": 29482.32,
-    "ma200_deviation_pct": 9.17,
+    "ma200": 27029.49,
+    "current_price": 29544.16,
+    "ma200_deviation_pct": 9.3,
     "mc_paths": 5000,
     "mc_days": 60,
     "mc_distribution": {
-      "up_gt_10": 30.14,
-      "up_0_10": 39.02,
-      "down_0_5": 15.48,
-      "down_5_10": 8.54,
-      "down_gt_10": 6.82
+      "up_gt_10": 31.38,
+      "up_0_10": 37.72,
+      "down_0_5": 14.64,
+      "down_5_10": 8.94,
+      "down_gt_10": 7.32
     },
     "reason": "NDX is used as AI-cycle proxy because Nasdaq 100 better represents AI leaders than broad IXIC."
   },
   "market_health": {
     "current": {
       "date": "2026-09-04",
-      "trend_score": 7.5,
+      "trend_score": 7.0,
       "risk_score": 5.0,
-      "mc_up_probability": 0.6901,
-      "ai_cycle_score": 41.6
+      "mc_up_probability": 0.6898,
+      "ai_cycle_score": 41.66
     },
     "changes_30d": {
-      "trend_score": 2.5,
+      "trend_score": 2.0,
       "risk_score": 0.0,
-      "mc_up_probability": -0.0001,
-      "ai_cycle_score": 3.11
+      "mc_up_probability": -0.0004,
+      "ai_cycle_score": 3.17
     },
     "statuses": {
       "trend_strength": "改善中",
@@ -262,7 +262,7 @@
       "ai_cycle": "中期"
     },
     "ai_cycle": {
-      "score": 41.6,
+      "score": 41.66,
       "stage": "中期",
       "symbols": {
         "IXIC": {
@@ -277,14 +277,14 @@
           }
         },
         "NDX": {
-          "score": 42.17,
+          "score": 42.29,
           "stage": "中期",
           "components": {
-            "ma200_deviation": 7.86,
-            "monte_carlo": 17.29,
+            "ma200_deviation": 7.97,
+            "monte_carlo": 17.27,
             "volatility": 11.83,
             "drawdown_risk": 3.15,
-            "price_extension": 2.04
+            "price_extension": 2.07
           }
         }
       }
@@ -655,10 +655,10 @@
       },
       {
         "date": "2026-09-04",
-        "trend_score": 7.5,
+        "trend_score": 7.0,
         "risk_score": 5.0,
-        "mc_up_probability": 0.6901,
-        "ai_cycle_score": 41.6
+        "mc_up_probability": 0.6898,
+        "ai_cycle_score": 41.66
       }
     ],
     "reason": "computed during analyze.py from summary aggregates; dashboard only displays these values"
