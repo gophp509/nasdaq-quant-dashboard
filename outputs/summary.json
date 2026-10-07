@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T09:45:48.762600+00:00",
+  "generated_at": "2026-10-07T01:56:15.748171+00:00",
   "data_start": "2010-01-01",
   "data_end": "2026-10-05",
   "selected_symbols": [
@@ -7,7 +7,7 @@
     "NDX"
   ],
   "data_status": {
-    "last_update": "2026-10-06 09:45:44",
+    "last_update": "2026-10-07 01:56:12",
     "source": "Nasdaq Official",
     "last_trading_day": "2026-10-05",
     "ixic_records": 4269,
@@ -34,7 +34,7 @@
       "cache_path": "data/raw/IXIC.csv",
       "cache_start": "2010-01-01",
       "latest_date": "2026-10-05",
-      "cache_age_days": 1,
+      "cache_age_days": 2,
       "latest_close": 27477.31,
       "latest_indicators": {
         "MA20": 26675.3005,
@@ -133,7 +133,7 @@
       "cache_path": "data/raw/NDX.csv",
       "cache_start": "2010-01-01",
       "latest_date": "2026-10-05",
-      "cache_age_days": 1,
+      "cache_age_days": 2,
       "latest_close": 31076.44,
       "latest_indicators": {
         "MA20": 29984.2505,
