@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T10:01:29.565364+00:00",
+  "generated_at": "2026-10-10T01:57:05.679764+00:00",
   "data_start": "2010-01-01",
   "data_end": "2026-10-08",
   "selected_symbols": [
@@ -7,7 +7,7 @@
     "NDX"
   ],
   "data_status": {
-    "last_update": "2026-10-09 10:01:26",
+    "last_update": "2026-10-10 01:57:02",
     "source": "Nasdaq Official",
     "last_trading_day": "2026-10-08",
     "ixic_records": 4272,
@@ -34,7 +34,7 @@
       "cache_path": "data/raw/IXIC.csv",
       "cache_start": "2010-01-01",
       "latest_date": "2026-10-08",
-      "cache_age_days": 1,
+      "cache_age_days": 2,
       "latest_close": 27193.34,
       "latest_indicators": {
         "MA20": 26854.073,
@@ -133,7 +133,7 @@
       "cache_path": "data/raw/NDX.csv",
       "cache_start": "2010-01-01",
       "latest_date": "2026-10-08",
-      "cache_age_days": 1,
+      "cache_age_days": 2,
       "latest_close": 30725.81,
       "latest_indicators": {
         "MA20": 30238.1415,
@@ -252,8 +252,8 @@
     "changes_30d": {
       "trend_score": 2.0,
       "risk_score": 0.0,
-      "mc_up_probability": 0.0034,
-      "ai_cycle_score": 2.54
+      "mc_up_probability": 0.0016,
+      "ai_cycle_score": 0.83
     },
     "statuses": {
       "trend_strength": "改善中",
