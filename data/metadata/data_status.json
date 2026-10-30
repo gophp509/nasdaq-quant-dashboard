@@ -1,10 +1,10 @@
 {
-  "last_update": "2026-10-30 02:10:57",
+  "last_update": "2026-10-30 06:49:51",
   "source": "Nasdaq Official",
-  "last_trading_day": "2026-10-28",
-  "ixic_records": 4286,
-  "ixic_last_trading_day": "2026-10-28",
-  "ndx_records": 4286,
-  "ndx_last_trading_day": "2026-10-28",
+  "last_trading_day": "2026-10-29",
+  "ixic_records": 4287,
+  "ixic_last_trading_day": "2026-10-29",
+  "ndx_records": 4287,
+  "ndx_last_trading_day": "2026-10-29",
   "errors": []
 }
