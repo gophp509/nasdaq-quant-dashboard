@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T10:45:24.433037+00:00",
+  "generated_at": "2026-11-11T02:19:14.564974+00:00",
   "data_start": "2010-01-01",
   "data_end": "2026-11-09",
   "selected_symbols": [
@@ -7,14 +7,17 @@
     "NDX"
   ],
   "data_status": {
-    "last_update": "2026-11-10 10:45:21",
+    "last_update": "2026-11-11 02:19:11",
     "source": "Nasdaq Official",
     "last_trading_day": "2026-11-09",
     "ixic_records": 4294,
     "ixic_last_trading_day": "2026-11-09",
     "ndx_records": 4294,
     "ndx_last_trading_day": "2026-11-09",
-    "errors": []
+    "errors": [
+      "IXIC: HTTPError: HTTP Error 403: Forbidden",
+      "NDX: HTTPError: HTTP Error 403: Forbidden"
+    ]
   },
   "comparison": {
     "ndx_vs_ixic_return_20d": -0.016771,
@@ -34,7 +37,7 @@
       "cache_path": "data/raw/IXIC.csv",
       "cache_start": "2010-01-01",
       "latest_date": "2026-11-09",
-      "cache_age_days": 1,
+      "cache_age_days": 2,
       "latest_close": 25253.14,
       "latest_indicators": {
         "MA20": 25975.614,
@@ -133,7 +136,7 @@
       "cache_path": "data/raw/NDX.csv",
       "cache_start": "2010-01-01",
       "latest_date": "2026-11-09",
-      "cache_age_days": 1,
+      "cache_age_days": 2,
       "latest_close": 27907.62,
       "latest_indicators": {
         "MA20": 28953.0915,
