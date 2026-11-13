@@ -1,13 +1,10 @@
 {
-  "last_update": "2026-11-12 10:37:43",
+  "last_update": "2026-11-13 02:59:02",
   "source": "Nasdaq Official",
-  "last_trading_day": "2026-11-09",
-  "ixic_records": 4294,
-  "ixic_last_trading_day": "2026-11-09",
-  "ndx_records": 4294,
-  "ndx_last_trading_day": "2026-11-09",
-  "errors": [
-    "IXIC: HTTPError: HTTP Error 403: Forbidden",
-    "NDX: HTTPError: HTTP Error 403: Forbidden"
-  ]
+  "last_trading_day": "2026-11-11",
+  "ixic_records": 4296,
+  "ixic_last_trading_day": "2026-11-11",
+  "ndx_records": 4296,
+  "ndx_last_trading_day": "2026-11-11",
+  "errors": []
 }
